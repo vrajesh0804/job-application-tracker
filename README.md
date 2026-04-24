@@ -26,28 +26,6 @@ Track roles, companies, HR contacts, application status, and manage your job hun
 
 ---
 
-## 📂 Project Structure
-
-joblisting/
-│
-├── applications/
-│ ├── models.py
-│ ├── views.py
-│ ├── forms.py
-│ ├── urls.py
-│ ├── templates/
-│ ├── static/
-│
-├── joblisting/
-│ ├── settings.py
-│ ├── urls.py
-│
-├── db.sqlite3
-├── manage.py
-
-
----
-
 ## ⚙️ Setup Instructions
 
 ```bash
