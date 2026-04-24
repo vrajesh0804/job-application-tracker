@@ -1,0 +1,106 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Job Listing</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="{% static 'css/job-tracker.css' %}">
+</head>
+<body>
+
+<main class="page-wrapper">
+
+  <section class="hero-section">
+    <div>
+      <span class="badge">Job Tracker</span>
+      <h1>All Applications</h1>
+      <p>View your job applications grouped by application date.</p>
+
+      <a href="{% url 'add_application' %}" class="btn-hero">
+        + Add New Application
+      </a>
+    </div>
+  </section>
+
+  <section class="list-section">
+    <div class="section-header">
+      <h2>Application List</h2>
+
+      <a href="{% url 'add_application' %}" class="btn-primary small-btn">
+        Add Application
+      </a>
+    </div>
+
+    {% regroup applications by date as date_groups %}
+
+    {% for group in date_groups %}
+      <div class="date-card">
+
+        <div class="date-card-header">
+          <h3>{{ group.grouper|date:"F d, Y" }}</h3>
+          <span class="count-badge">
+            {{ group.list|length }} Application{{ group.list|length|pluralize }}
+          </span>
+        </div>
+
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Role</th>
+                <th>Company</th>
+                <th>HR</th>
+                <th>Status</th>
+                <th>Link</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {% for app in group.list %}
+                <tr>
+                  <td>{{ app.role_name }}</td>
+                  <td>{{ app.company_name }}</td>
+                  <td>{{ app.hr_name|default:"-" }}</td>
+
+                  <td>
+                    <span class="status {{ app.status }}">
+                      {{ app.get_status_display }}
+                    </span>
+                  </td>
+
+                  <td>
+                    {% if app.link %}
+                      <a href="{{ app.link }}" target="_blank">Open</a>
+                    {% else %}
+                      -
+                    {% endif %}
+                  </td>
+
+                  <td class="action-icons">
+                    <a href="{% url 'edit_application' app.id %}" class="icon edit">✏️</a>
+                    <a href="{% url 'update_status' app.id 'approved' %}" class="icon approve">✔️</a>
+                    <a href="{% url 'update_status' app.id 'rejected' %}" class="icon reject">❌</a>
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+    {% empty %}
+      <div class="empty">
+        No applications added yet.
+      </div>
+    {% endfor %}
+
+  </section>
+
+</main>
+
+</body>
+</html>
